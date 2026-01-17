@@ -1,0 +1,73 @@
+server:
+  port: 8081
+#  servlet:
+#    context-path: /api
+
+spring:
+  application:
+    name: task-manager-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/task_manager_db
+    username: ismael
+    password: ismael
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # Configuration OAuth2 Resource Server pour Keycloak
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/kti-service
+          jwk-set-uri: http://localhost:8080/realms/kti-service/protocol/openid-connect/certs
+
+# CORS Configuration (pour Ionic/React frontend)
+cors:
+  allowed-origins: http://localhost:5173,http://localhost:8100
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tags-sorter: alpha
+
+# Logging
+logging:
+  level:
+    com.taskmanager: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

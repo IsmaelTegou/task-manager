@@ -23,14 +23,12 @@ export const useTasks = (): UseTasksReturn => {
     setLoading(true);
     setError(null);
     try {
-      // TODO: Replace with actual API call
-      // const response = await apiService.getAxiosInstance().get('/tasks');
-      // setTasks(response.data);
-      
-      const response: any = await apiService.getTasks();
-      setTasks(response.data);
+      // APPEL RÉEL
+      const response = await apiService.getTasks();
+      setTasks(response.data.data); // Note: response.data.data car notre API retourne ApiResponse<T>
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch tasks');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch tasks';
+      setError(errorMessage);
       console.error('Error fetching tasks:', err);
     } finally {
       setLoading(false);
@@ -40,14 +38,12 @@ export const useTasks = (): UseTasksReturn => {
   const getTask = useCallback(async (id: string): Promise<Task | null> => {
     setLoading(true);
     try {
-      // TODO: Replace with actual API call
-      // const response = await apiService.getAxiosInstance().get(`/tasks/${id}`);
-      // return response.data;
-      
-      const response: any = await apiService.getTask(id);
-      return response.data;
+      // APPEL RÉEL
+      const response = await apiService.getTask(id);
+      return response.data.data;
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch task');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch task';
+      setError(errorMessage);
       console.error('Error fetching task:', err);
       return null;
     } finally {
@@ -58,17 +54,14 @@ export const useTasks = (): UseTasksReturn => {
   const createTask = useCallback(async (taskData: CreateTaskDto): Promise<Task | null> => {
     setLoading(true);
     try {
-      // TODO: Replace with actual API call
-      // const response = await apiService.getAxiosInstance().post('/tasks', taskData);
-      // setTasks(prev => [...prev, response.data]);
-      // return response.data;
-      
-      const response: any = await apiService.createTask(taskData);
-      const newTask = response.data;
+      // APPEL RÉEL
+      const response = await apiService.createTask(taskData);
+      const newTask = response.data.data;
       setTasks(prev => [...prev, newTask]);
       return newTask;
     } catch (err: any) {
-      setError(err.message || 'Failed to create task');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to create task';
+      setError(errorMessage);
       console.error('Error creating task:', err);
       return null;
     } finally {
@@ -79,17 +72,14 @@ export const useTasks = (): UseTasksReturn => {
   const updateTask = useCallback(async (id: string, taskData: UpdateTaskDto): Promise<Task | null> => {
     setLoading(true);
     try {
-      // TODO: Replace with actual API call
-      // const response = await apiService.getAxiosInstance().put(`/tasks/${id}`, taskData);
-      // setTasks(prev => prev.map(task => task.id === id ? response.data : task));
-      // return response.data;
-      
-      const response: any = await apiService.updateTask(id, taskData);
-      const updatedTask = response.data;
+      // APPEL RÉEL
+      const response = await apiService.updateTask(id, taskData);
+      const updatedTask = response.data.data;
       setTasks(prev => prev.map(task => task.id === id ? updatedTask : task));
       return updatedTask;
     } catch (err: any) {
-      setError(err.message || 'Failed to update task');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to update task';
+      setError(errorMessage);
       console.error('Error updating task:', err);
       return null;
     } finally {
@@ -100,15 +90,13 @@ export const useTasks = (): UseTasksReturn => {
   const deleteTask = useCallback(async (id: string): Promise<boolean> => {
     setLoading(true);
     try {
-      // TODO: Replace with actual API call
-      // await apiService.getAxiosInstance().delete(`/tasks/${id}`);
-      // setTasks(prev => prev.filter(task => task.id !== id));
-      
+      // APPEL RÉEL
       await apiService.deleteTask(id);
       setTasks(prev => prev.filter(task => task.id !== id));
       return true;
     } catch (err: any) {
-      setError(err.message || 'Failed to delete task');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to delete task';
+      setError(errorMessage);
       console.error('Error deleting task:', err);
       return false;
     } finally {
